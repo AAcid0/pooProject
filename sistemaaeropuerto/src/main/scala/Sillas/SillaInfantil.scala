@@ -4,11 +4,12 @@ import Personas._
 
 class SillaInfantil extends Silla
 {
+    override var _numSilla = 0
     override var _clase : String = "Clase Infantil"
     override var _codigoSilla : String = "CI".concat(GeneradorCodigo.crearCodigo())
     override var _disponible : Boolean = true
     override var _pasajeroAsignado : Pasajero = _ 
-    override var _precio : Int = _
+    override var _precio : Int = 30000
     private var _personalAsignado : Tripulante = _
 
     def personalAsignado = _personalAsignado
@@ -18,4 +19,11 @@ class SillaInfantil extends Silla
     /*Métodos*/
 
     def calcularCosto() = _precio
+    override def numSilla = _numSilla
+
+    def this(num : Int)
+    {
+        this()
+        _numSilla = num
+    }
 }
