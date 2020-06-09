@@ -33,7 +33,7 @@ class Aerolinea
         }
     }
 
-    def mostrarVuelos(diaSal : String, ciudadOri : String, ciudadDe : String) : Boolean = 
+    def mostrarVuelo(diaSal : String, ciudadOri : String, ciudadDe : String) : Boolean = 
     {
         var encontrado : Boolean = false
         for(i <- _listaVuelos)
@@ -53,18 +53,35 @@ class Aerolinea
         return encontrado
     }
 
-    def buscarVuelo(cod : String) : Vuelo =
+    def buscarVuelo(cod : String) : Option[Vuelo] =
     {
-        for(i <- _listaVuelos)
+        var vue : Option[Vuelo] = None
+        if(listaVuelos.nonEmpty)
         {
-            if(cod == i.codigoVuelo)
+            vue = listaVuelos.filter(i => i.codigoVuelo == cod).headOption
+        }
+        else
+        {
+            println("No se encontraron vuelos con el código ingresado, por favor verifique.")
+        }
+        return vue
+    }
+    def crearVuelo(ciuOr : String, ciuDe : String, diaSal : String, horSa : String, tipVuelo : Int, aerol : String) : Try[Unit] =
+    {
+        Try
+        {
+            var nuevoVuelo = new Vuelo(ciuOr, ciuDe, diaSal, horSa, tipVuelo, aerol)
+            if(!(ciuOr == "" || ciuDe == "" || diaSal == "" || horSa == "" || tipVuelo == "" || aerol == ""))
             {
-                return i
+                _listaVuelos = nuevoVuelo :: _listaVuelos
+                println("Código de vuelo: " + nuevoVuelo.codigoVuelo)
+            }
+            else
+            {
+                throw new Exception("Ingrese la información completa para crear el vuelo.")
             }
         }
-        return new Vuelo(0)
     }
-
     def crearAvion(tipoVuelos : Int, nombre : String, aerol : String) : Try[Unit] = //1 -> Nacional  / 2 -> internacional
     {
         Try

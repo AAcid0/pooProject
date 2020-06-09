@@ -9,9 +9,9 @@ class Avion
     var _capacidadMax : Int = _  //nacional = 50 / Internacional = 100
     var _nombreAvion : String = _
     var _aerolinea : String = _
-    var _listaSillas : List[Silla] = _
+    var _listaSillas : List[Silla] = List()
     var _listaVuelos : String = _
-    var _listaTripulacion : List[Tripulante] = _
+    var _listaTripulacion : List[Tripulante] = List()
 
     def capacidadMax = _capacidadMax
     def nombreAvion = _nombreAvion

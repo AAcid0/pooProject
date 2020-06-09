@@ -8,9 +8,10 @@ class Vuelo
     var _horaSalida : String = _
     var _horaLlegada : String = _
     var _diaSalida : String = _
-    var _conexiones : List[Recorrido] = _
+    var _conexiones : List[Recorrido] = List()
     var _tipoVuelo : Int = _ //1 -> Nacional / 2 -> Internacional
     var _avionAsignado : Avion = _
+    var _aerolinea : String = _
     var _codigoVuelo : String = GeneradorCodigo.crearCodigo()
     var _costoVuelo : Double = 0
     var _cupoCompleto : Boolean = false
@@ -32,20 +33,21 @@ class Vuelo
     def tipoVuelo_= (nuevoTipo : Int) = _tipoVuelo = nuevoTipo
     def avionAsignado_= (nuevoAvion : Avion) = _avionAsignado = nuevoAvion
 
-    def this(num : Int)
+    /*def this(num : Int)
     {
         this()
         _codigoVuelo = "0"
-    }
+    }*/
 
-    def this(hoSal : String, hoLl : String, diaSal : String, tipVuelo : Int)
+    def this(ciuOr : String, ciuDe : String, diaSal : String, horSa : String, tipVuelo : Int, aero : String)
     {
         this()
-        _horaSalida = hoSal
-        _horaLlegada = hoLl
+        _ciudadOrigen = ciuOr
+        _ciudadDestino = ciuDe
         _diaSalida = diaSal
+        _horaSalida = horSa
         _tipoVuelo = tipVuelo
-        //_avionAsignado = new Avion(tipVuelo)
+        _aerolinea = aero
 
     }
 
