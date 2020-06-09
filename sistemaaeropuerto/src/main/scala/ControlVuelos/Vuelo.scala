@@ -45,7 +45,7 @@ class Vuelo
         _horaLlegada = hoLl
         _diaSalida = diaSal
         _tipoVuelo = tipVuelo
-        _avionAsignado = new Avion(tipVuelo)
+        //_avionAsignado = new Avion(tipVuelo)
 
     }
 
