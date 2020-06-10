@@ -26,13 +26,16 @@ class Aerolinea
 
     def mostrarVuelos() : Unit =
     {
-        println("Dia salida -- Hora salida -- Ciudad Origen -- Ciudad destino")
-        for(i <- listaVuelos)
+        if(!listaVuelos.isEmpty)
         {
-            println(i.diaSalida + " " + i.horaSalida + " " + i.ciudadOrigen + " " + i.ciudadDestino)
+            println("| Dia salida |\t| Hora salida |\t| Ciudad Origen |\t| Ciudad destino |\t| Código |\t| Avión |")
+            for(i <- listaVuelos)
+            {
+                println("| " + i.diaSalida + " |\t| " + i.horaSalida + " |\t| " + i.ciudadOrigen + " |\t| " + i.ciudadDestino+ " |\t| " + i.codigoVuelo+ " |\t|\t" + i.avionAsignado.nombreAvion)
+            }
         }
     }
-
+ 
     def mostrarVuelo(diaSal : String, ciudadOri : String, ciudadDe : String) : Boolean = 
     {
         var encontrado : Boolean = false
@@ -62,9 +65,22 @@ class Aerolinea
         }
         else
         {
-            println("No se encontraron vuelos con el código ingresado, por favor verifique.")
+            //println("No se encontraron vuelos con el código ingresado, por favor verifique.")
         }
         return vue
+    }
+    def buscarAvion(nombre : String) : Option[Avion] =
+    {
+        var avi : Option[Avion] = None
+        if(listaAviones.nonEmpty)
+        {
+            avi = listaAviones.filter(i => i.nombreAvion == nombre).headOption
+        }
+        else
+        {
+            //println("No se encontraron aviones con ese modelo, por favor verifique.")
+        }
+        return avi
     }
     def crearVuelo(ciuOr : String, ciuDe : String, diaSal : String, horSa : String, tipVuelo : Int, aerol : String) : Try[Unit] =
     {
@@ -107,8 +123,18 @@ class Aerolinea
             }
         }
     }
-    def mostrarAviones() : List[Avion] = {
-        return listaAviones
+    def mostrarAviones() : Unit = {
+        if(!listaAviones.isEmpty)
+        {
+            println("| Nombre Avión |\t| Tipo Vuelos |")
+            listaAviones.foreach(i => {
+                var tipoA : String = ""
+                if(i.tipo == 1){tipoA = "Nacional"}
+                else{tipoA = "Internacional"}
+                println("| " + i.nombreAvion + " |\t| " + tipoA + " |")
+            })
+        }
+
     }
 
 

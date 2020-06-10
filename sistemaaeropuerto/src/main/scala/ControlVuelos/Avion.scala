@@ -13,6 +13,7 @@ class Avion
     var _listaVuelos : String = _
     var _listaTripulacion : List[Tripulante] = List()
 
+    def tipo = _tipo
     def capacidadMax = _capacidadMax
     def nombreAvion = _nombreAvion
     def aerolinea = _aerolinea
@@ -25,6 +26,11 @@ class Avion
     def nombreAvion_= (nuevoNombre : String) = _nombreAvion = nuevoNombre
     def aerolinea_= (nuevaAerolinea : String) = _aerolinea = nuevaAerolinea 
 
+    /*def this(nom : String)
+    {
+        this()
+        _nombreAvion = nom
+    }*/
     def this(tip : Int, nom : String, aerol : String)
     {
         this()

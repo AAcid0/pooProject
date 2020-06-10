@@ -32,7 +32,7 @@ class Aeropuerto
         {
             if(listaAerolineas.isEmpty)
             {
-                throw new Exception("No hay aerolíneas para mostrar, empiece creando una.")
+                throw new Exception("No hay aerolíneas para mostrar.")
             }
         }
     } 

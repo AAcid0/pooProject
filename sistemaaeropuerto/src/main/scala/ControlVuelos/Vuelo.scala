@@ -10,7 +10,7 @@ class Vuelo
     var _diaSalida : String = _
     var _conexiones : List[Recorrido] = List()
     var _tipoVuelo : Int = _ //1 -> Nacional / 2 -> Internacional
-    var _avionAsignado : Avion = _
+    var _avionAsignado : Avion = new Avion
     var _aerolinea : String = _
     var _codigoVuelo : String = GeneradorCodigo.crearCodigo()
     var _costoVuelo : Double = 0
@@ -48,6 +48,7 @@ class Vuelo
         _horaSalida = horSa
         _tipoVuelo = tipVuelo
         _aerolinea = aero
+        //_avionAsignado = new Avion
 
     }
 
@@ -78,5 +79,8 @@ class Vuelo
         {
             _costoVuelo += i.calcularCosto()
         } 
+    }
+    def cambiarAvion(nuevoAv : Avion) : Unit = {
+        avionAsignado = nuevoAv
     }
 }
