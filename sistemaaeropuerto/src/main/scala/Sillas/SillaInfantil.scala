@@ -26,4 +26,9 @@ class SillaInfantil extends Silla
         this()
         _numSilla = num
     }
+
+    def agregarPersonal(asig : Tripulante) : Unit = 
+    {
+        _personalAsignado = asig
+    }
 }

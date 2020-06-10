@@ -15,6 +15,7 @@ class Vuelo
     var _codigoVuelo : String = GeneradorCodigo.crearCodigo()
     var _costoVuelo : Double = 0
     var _cupoCompleto : Boolean = false
+    var _estadoVuelo : Int = 0 // 0 -> No iniciado / 1 -> en progreso / 2 -> En escala / 3 -> Finalizado 
 
     def ciudadOrigen = _ciudadOrigen
     def ciudadDestino = _ciudadDestino
@@ -25,6 +26,7 @@ class Vuelo
     def tipoVuelo = _tipoVuelo
     def avionAsignado = _avionAsignado
     def codigoVuelo = _codigoVuelo
+    def costoVuelo = _costoVuelo
 
     def ciudadOrigen_= (nuevoOrigen : String) = _ciudadOrigen = nuevoOrigen
     def ciudadDestino_= (nuevoDestino : String) = _ciudadDestino = nuevoDestino
@@ -83,4 +85,5 @@ class Vuelo
     def cambiarAvion(nuevoAv : Avion) : Unit = {
         avionAsignado = nuevoAv
     }
+    
 }

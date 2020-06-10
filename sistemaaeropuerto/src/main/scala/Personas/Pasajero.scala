@@ -4,7 +4,7 @@ import Sillas._
 class Pasajero extends Persona
 {
     override var _nombre : String = _
-    override var _cedula : Int = _
+    override var _cedula : String = _
     private var _tipoPlan : String = _
     private var _sillaAsignada : Silla = _
     private var _numeroMaletas : Int = _
@@ -19,5 +19,17 @@ class Pasajero extends Persona
     def sillaAsignada_= (nuevaSilla : Silla) = _sillaAsignada = nuevaSilla
     def numeroMaletas_= (nuevaCantidad : Int) = _numeroMaletas = nuevaCantidad
     def necesidadEspecial_= (nuevaNecesidad : String) = _necesidadEspecial = nuevaNecesidad
+
+    def this(nom : String, ced : String) 
+    {
+        this()
+        _nombre = nom 
+        _cedula = ced
+    }
+
+    def agregarEspecial(espe : String) : Unit =
+    {
+        _necesidadEspecial = espe
+    }
 
 }

@@ -3,7 +3,7 @@ package Personas
 class Tripulante extends Persona
 {
     override var _nombre : String = _
-    override var _cedula : Int = _
+    override var _cedula : String = _
     private var _cargo : String = _
     private var _pasajeroAsignado : Boolean = false
 
@@ -17,5 +17,13 @@ class Tripulante extends Persona
     def asignarPasajero() : Unit =
     {
         _pasajeroAsignado = true
+    }
+
+    def this(nom : String, ced : String, car : String)
+    {
+        this()
+        _nombre = nom
+        _cedula = ced 
+        _cargo = car
     }
 }

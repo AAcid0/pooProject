@@ -2,6 +2,10 @@ package Aeropuerto
 import scala.io._
 import scala.util._
 import ControlVuelos._
+import ControlVuelos._
+import Personas._
+import Servicios._
+import Sillas._
 
 object Interfaz extends App
 {
@@ -15,7 +19,7 @@ object Interfaz extends App
         println("Ingresa la opción que se adapte a tu perfil:")
         println("1-> Soy Cliente.")
         println("2-> Soy Operario.")
-        println("3-> Salir.")
+        println("0-> Salir.")
         println("Su elección: ")
         var perfil : Int = StdIn.readInt()
         perfil match
@@ -29,6 +33,7 @@ object Interfaz extends App
                     println("Sus opciones son:")
                     println("1-> Ver vuelos disponibles.")
                     println("2-> Comprar ticket.")
+                    println("3-> Consultar vuelo infantil")
                     println("0-> Volver.")
                     var opc : Int = StdIn.readInt()
                     opc match
@@ -124,6 +129,79 @@ object Interfaz extends App
                                 }
                             }
                         }
+                        case 3 => {
+                            println("Aeropuertocentral.com\nModulo menor de edad")
+                            println("Que desea saber del viaje de su hijo:")
+                            println("1 -> recepción del niño")
+                            println("2 -> Estado del niño")
+                            var opc : Int = StdIn.readInt()
+                            opc match
+                            {
+                                case 1 => {
+                                    var comprobarAero = aeropuerto.comprobarAerolineas()
+                                    var vueloDec : Vuelo = new Vuelo
+                                    comprobarAero match
+                                    {
+                                        case Success(s) => {
+                                        println("Ingrese la aerolínea deseada:")
+                                        var aeroDec : String = StdIn.readLine()
+                                        aeropuerto.listaAerolineas.foreach(i => {
+                                            if(i.nombreAerolinea == aeroDec)
+                                            {
+                                                println("Ingresa el código de vuelo deseado:")
+                                                var codVue : String = StdIn.readLine()
+                                                var vueloDeseado = i.buscarVuelo(codVue)
+                                                vueloDec = vueloDeseado.asInstanceOf[Vuelo]
+
+                                            }
+                                            }) 
+                                        }
+                                        case Failure(f) => println(f)
+                                    }
+                                    if(vueloDec._estadoVuelo != 3)
+                                    {
+                                        println("Su hijo no ha sido recogido, ya que no se ha finalizado el vuelo")
+                                        println("Espere a que el vuelo finalize para confirmar la recogida de su menor")
+                                    }
+                                    else
+                                    {
+                                        ("Su hijo ya ha sido recogido")
+                                    }
+                                }
+                                case 2 => 
+                                {
+                                    var comprobarAero = aeropuerto.comprobarAerolineas()
+                                    var vueloDec : Vuelo = new Vuelo
+                                    comprobarAero match
+                                    {
+                                        case Success(s) => {
+                                        println("Ingrese la aerolínea deseada:")
+                                        var aeroDec : String = StdIn.readLine()
+                                        aeropuerto.listaAerolineas.foreach(i => {
+                                            if(i.nombreAerolinea == aeroDec)
+                                            {
+                                                println("Ingresa el código de vuelo deseado:")
+                                                var codVue : String = StdIn.readLine()
+                                                var vueloDeseado = i.buscarVuelo(codVue)
+                                                vueloDec = vueloDeseado.asInstanceOf[Vuelo]
+
+                                            }
+                                            }) 
+                                        }
+                                        case Failure(f) => println(f)
+                                    }
+                                    vueloDec._estadoVuelo match
+                                    {
+                                        case 0 => println("El vuelo no ha iniciado")
+                                        case 1 => println("El vuelo se encuentra en progreso")
+                                        case 2 => println("El menor se encuentra realizando una escala acompañado de un tripulante")
+                                        case 3 => println("El menor ya ha sido recogido en el aerpuerto")
+                                    }
+                                }
+                            }
+
+                            
+                        }
                         case 0 => {
                             sesionCliente = false
                         }
@@ -144,6 +222,8 @@ object Interfaz extends App
                     println("2-> Crear una nueva aerolínea.")
                     println("3-> Crear un nuevo vuelo disponible.")
                     println("4-> Consultar vuelos por Aerolinea.")
+                    println("5 -> Modulo de pasajero")
+                    println("6 -> Gestionar menor de edad")
                     println("0 -> Volver.")
                     println("Su elección: ")
                     var opc : Int = StdIn.readInt()
@@ -309,6 +389,170 @@ object Interfaz extends App
                             }
 
                         }
+                        case 5 => {
+                            println("Modulo de pasajero")
+                            println("=========================")
+                            var costoSilla : Double = 0
+                            var comprobarAero = aeropuerto.comprobarAerolineas()
+                            var costoVuelo : Double = 0
+                            var vueloDec : Vuelo = new Vuelo
+                            comprobarAero match
+                            {
+                                case Success(s) => {
+                                println("Ingrese la aerolínea deseada:")
+                                var aeroDec : String = StdIn.readLine()
+                                aeropuerto.listaAerolineas.foreach(i => {
+                                    if(i.nombreAerolinea == aeroDec)
+                                    {
+                                        println("Ingresa el código de vuelo deseado:")
+                                        var codVue : String = StdIn.readLine()
+                                        var vueloDeseado = i.buscarVuelo(codVue)
+                                        vueloDec = vueloDeseado.asInstanceOf[Vuelo]
+                                        costoVuelo = vueloDec.costoVuelo
+
+                                    }
+                                    }) 
+                                }
+                                case Failure(f) => println(f)
+                            }
+                            if(vueloDec._cupoCompleto == false)
+                            {
+                                println("Ingrese nombre del pasajero")
+                                var nombrePas : String = StdIn.readLine()
+                                println("Ingrese documento del pasajero")
+                                var docum : String = StdIn.readLine()
+                                println("Ingrese silla en la cual quiere viajar")
+                                var sill : Int = StdIn.readInt()
+                                for(i <- vueloDec.avionAsignado.listaSillas)
+                                {
+                                    if(i.numSilla == sill)
+                                    {
+                                        if(i.disponible == false)
+                                        {
+                                            println("Silla ocupada por otro usuario")
+                                        }
+                                        else
+                                        {
+                                            i.cambiarEstado()
+                                            var pasa : Pasajero = new Pasajero(nombrePas,docum)
+                                            costoSilla = i.precio 
+                                            i.asignarPasajero(pasa)
+                                            println("Silla asignada correctamente")
+                                            println("Ingrese número de maletas las cuales llevara en su viaje")
+                                            var numMal : Int = StdIn.readInt()
+                                            if(numMal > 3)
+                                            {
+                                                println("Mas maletas de las permitidas por la aerolinea, por favor saque algunas")
+                                                println("¿Necesitas algun servicio especial?")
+                                                var espe : String = StdIn.readLine()
+                                                pasa.agregarEspecial(docum)
+
+                                            }
+                                            else
+                                            {   
+                                                println("Número de maletas permitido por la Aerolinea")
+                                                println("¿Necesitas algun servicio especial?")
+                                                var espe : String = StdIn.readLine()
+                                                pasa.agregarEspecial(docum)
+                                            }
+                                        }
+                                    }
+                                }
+                                println("El costo de su vuelo es:")
+                                var cos : Double = costoVuelo + costoSilla                                 
+                            }
+                            else
+                            {
+                                println("El vuelo esta completo")
+                            }
+                            
+
+                        }
+                        case 6 => {
+                            println("Modulo de pasajero menor de edad")
+                            println("=========================")
+                            var costoSilla : Double = 0
+                            var comprobarAero = aeropuerto.comprobarAerolineas()
+                            var costoVuelo : Double = 0
+                            var vueloDec : Vuelo = new Vuelo
+                            comprobarAero match
+                            {
+                                case Success(s) => {
+                                println("Ingrese la aerolínea deseada:")
+                                var aeroDec : String = StdIn.readLine()
+                                aeropuerto.listaAerolineas.foreach(i => {
+                                    if(i.nombreAerolinea == aeroDec)
+                                    {
+                                        println("Ingresa el código de vuelo deseado:")
+                                        var codVue : String = StdIn.readLine()
+                                        var vueloDeseado = i.buscarVuelo(codVue)
+                                        vueloDec = vueloDeseado.asInstanceOf[Vuelo]
+                                        costoVuelo = vueloDec.costoVuelo
+
+                                    }
+                                    }) 
+                                }
+                                case Failure(f) => println(f)
+                            }
+                            if(vueloDec._cupoCompleto == false)
+                            {
+                                println("Ingrese nombre del menor")
+                                var nombrePas : String = StdIn.readLine()
+                                println("Ingrese documento del menor")
+                                var docum : String = StdIn.readLine()
+                                println("Ingrese silla en la cual quiere viajar")
+                                var sill : Int = StdIn.readInt()
+                                for(i <- vueloDec.avionAsignado.listaSillas)
+                                {
+                                    if(i.numSilla == sill)
+                                    {
+                                        if(i.disponible == false)
+                                        {
+                                            println("Silla ocupada por otro usuario")
+                                        }
+                                        else
+                                        {
+                                            var sillaNino : SillaInfantil = new SillaInfantil(i.numSilla)
+                                            sillaNino.cambiarEstado()
+                                            var pasa : Pasajero = new Pasajero(nombrePas,docum)
+                                            costoSilla = sillaNino.precio 
+                                            sillaNino.asignarPasajero(pasa)
+                                            println("Nombre tripulante que acompañara al menor")
+                                            var nomTri : String = StdIn.readLine()
+                                            println("Cedula del tripulante que acompañara al menor")
+                                            var cedu : String = StdIn.readLine()
+                                            var tripu : Tripulante = new Tripulante(nomTri,cedu,"Personal infantil")
+                                            tripu.asignarPasajero()
+                                            println("Datos tripulante encargado de su menor:")
+                                            println("Nombre : " + nomTri)
+                                            println("Cedula : "+ cedu)
+                                            sillaNino.agregarPersonal(tripu)
+                                            println("Silla asignada correctamente")
+                                            println("Ingrese número de maletas las cuales llevara el menor en su viaje")
+                                            var numMal : Int = StdIn.readInt()
+                                            if(numMal > 3)
+                                            {
+                                                println("Mas maletas de las permitidas por la aerolinea, por favor saque algunas")
+                                                pasa.agregarEspecial("clase infantil")
+
+                                            }
+                                            else
+                                            {   
+                                                println("Número de maletas permitido por la Aerolinea")
+                                                pasa.agregarEspecial("clase infantil")
+                                            }
+                                        }
+                                    }
+                                }
+                                println("El costo de su vuelo es:")
+                                var cos : Double = costoVuelo + costoSilla                                 
+                            }
+                            else
+                            {
+                                println("El vuelo esta completo")
+                            }
+
+                        }
                         case 0 => {
                             sesionOperario = false
                         }
@@ -317,6 +561,9 @@ object Interfaz extends App
                         }
                     }
                 }
+            }
+        case 0 => {
+                cerrarSistema = true 
             }
         }
     }

@@ -15,6 +15,7 @@ abstract class Silla
     def codigoSilla = _codigoSilla
     def disponible = _disponible
     def pasajeroAsignado = _pasajeroAsignado
+    def precio = _precio
 
     def clase_=(nuevaClase : String) = _clase = nuevaClase
     def codigoSilla_=(nuevoCodigo : String) = _codigoSilla = nuevoCodigo
@@ -24,5 +25,10 @@ abstract class Silla
     def asignarPasajero(pasa : Pasajero) : Unit = 
     { 
         this._pasajeroAsignado = pasa
+    }
+
+    def cambiarEstado() : Unit =
+    {
+        this._disponible == true
     }
 }
