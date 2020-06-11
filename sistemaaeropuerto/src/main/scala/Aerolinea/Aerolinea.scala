@@ -98,11 +98,11 @@ class Aerolinea
             }
         }
     }
-    def crearAvion(tipoVuelos : Int, nombre : String, aerol : String) : Try[Unit] = //1 -> Nacional  / 2 -> internacional
+    def crearAvion(tipoVuelos : Int, nombre : String, aerol : Aerolinea, cap : Int) : Try[Unit] = //1 -> Nacional  / 2 -> internacional
     {
         Try
         {
-            var nuevoAvion = new Avion(tipoVuelos, nombre, aerol)
+            var nuevoAvion = new Avion(tipoVuelos, nombre, aerol, cap)
             if(nombre != "")
             {
                 _listaAviones = nuevoAvion :: _listaAviones 
@@ -126,15 +126,24 @@ class Aerolinea
     def mostrarAviones() : Unit = {
         if(!listaAviones.isEmpty)
         {
-            println("| Nombre Avión |\t| Tipo Vuelos |")
+            println("| Nombre |\t| Tipo Vuelos |")
             listaAviones.foreach(i => {
                 var tipoA : String = ""
-                if(i.tipo == 1){tipoA = "Nacional"}
-                else{tipoA = "Internacional"}
+                if(i.tipo == 1){ tipoA = "Nacional" }
+                if(i.tipo == 2){ tipoA = "Internacional" }
                 println("| " + i.nombreAvion + " |\t| " + tipoA + " |")
             })
         }
 
+    }
+    def mostrarAvion(avi :  Avion) : Unit = {
+        var tipoA : String = ""
+        if(avi.capacidadMax == 8){ tipoA = "Nacional" }
+        if(avi.capacidadMax == 16){ tipoA = "Internacional" }
+        if(!listaAviones.isEmpty)
+        {
+            println("| " + avi.nombreAvion + " |\t| " + tipoA + " |")
+        }
     }
 
 

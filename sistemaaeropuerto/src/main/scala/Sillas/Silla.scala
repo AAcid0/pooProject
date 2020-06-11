@@ -27,8 +27,12 @@ abstract class Silla
         this._pasajeroAsignado = pasa
     }
 
-    def cambiarEstado() : Unit =
+    def ocuparSilla() : Unit =
     {
-        this._disponible == true
+        this._disponible = false
+    }
+    def liberarSilla() : Unit =
+    {
+        this._disponible = true
     }
 }

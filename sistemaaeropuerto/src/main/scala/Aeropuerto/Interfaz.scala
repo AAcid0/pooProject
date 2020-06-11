@@ -113,6 +113,52 @@ object Interfaz extends App
                                     comprobarAero match
                                     {
                                         case Success(s) => {
+                                            println("Compra de Ticket")
+                                            println("=================")
+                                            println("Registro de Pasajero")
+                                            println("Ingrese su nombre:")
+                                            var nombreUs : String = StdIn.readLine()
+                                            println("Ingrese # de documento:")
+                                            var cedulaUs : String = StdIn.readLine()
+                                            println("Planes Disponibles")
+                                            println("==================")
+                                            println("M -> Máx: 2 Maletas\nL -> Máx: 4 Maletas\nXL -> Máx 6 Maletas")
+                                            println("Ingrese su tipo de plan deseado:")
+                                            var planUs : String = StdIn.readLine()
+                                            println("Ingrese el número de maletas:")
+                                            var maletUs : Int = StdIn.readInt()
+                                            if(planUs == "M" && maletUs > 2)
+                                            {
+                                                println("Excede el número de maletas para su plan.")
+                                                println("Confirme el número de maletas.")
+                                                var maletUs : Int = StdIn.readInt()
+                                            } 
+                                            if(planUs == "L" && maletUs > 4)
+                                            {
+                                                println("Excede el número de maletas para su plan.")
+                                                println("Confirme el número de maletas.")
+                                                var maletUs : Int = StdIn.readInt()
+                                            }
+                                            if(planUs == "XL" && maletUs > 6)
+                                            {
+                                                println("Excede el número de maletas permitido por persona.")
+                                                println("Confirme el número de maletas.")
+                                                var maletUs : Int = StdIn.readInt()
+                                            }
+                                            println("¿Requiere algún servicio especial?")
+                                            println("Por ejemplo: Silla de ruedas,  muletas, es gestante")
+                                            println("1-> Si.")
+                                            println("2-> No.")
+                                            var especialDes : Boolean = false
+                                            var dec : Int = StdIn.readInt()
+                                            dec match
+                                            {
+                                                case 1 => especialDes = true
+                                                case 2 => especialDes = especialDes
+                                                case default => println("Ingrese opción válida.")
+                                            }
+                                            var pasajeroFull = new Pasajero(nombreUs, cedulaUs, planUs, maletUs, especialDes) //Se crea usurio al cual se asignará silla en el vuelo (Compra ticket)
+                                            println("Usuario creado, procediendo con compra.\n")
                                             println("Ingrese la aerolínea deseada:")
                                             var aeroDec : String = StdIn.readLine()
                                             aeropuerto.listaAerolineas.foreach(i => {
@@ -121,6 +167,89 @@ object Interfaz extends App
                                                     println("Ingresa el código de vuelo deseado:")
                                                     var codVue : String = StdIn.readLine()
                                                     var vueloDec = i.buscarVuelo(codVue)
+                                                    vueloDec match
+                                                    { 
+                                                        case Some(vuelo) => {
+                                                            println("Ingrese la clase deseada:")
+                                                            println("1-> Primera Clase")
+                                                            println("2-> Clase Económica")
+                                                            println("3-> Clase Infantil")
+                                                            println("Su elección es:")
+                                                            var opCla : Int = StdIn.readInt()
+                                                            opCla match
+                                                            {
+                                                                case 1 => {
+                                                                    var cont : Int = 1
+                                                                    println("| Numeración |\t| Código |")
+                                                                    vuelo.avionAsignado.listaSillas.foreach(sil => {
+                                                                        if(sil.clase == "Primera Clase" && sil.disponible == true)
+                                                                        {
+                                                                            println("| Silla #" + sil.numSilla +"|\t| " + sil.codigoSilla + " |")               
+                                                                        }
+                                                                        cont = cont + 1
+                                                                    })
+                                                                    println("Por favor ingrese el código de su asiento deseado: ")
+                                                                    var sillaDec : String = StdIn.readLine()
+                                                                    var comSilla : Option[Silla] = vuelo.avionAsignado.buscarSilla(sillaDec)
+                                                                    comSilla match {
+                                                                        case Some(sillaPC) => {
+                                                                            sillaPC.asignarPasajero(pasajeroFull)
+                                                                            sillaPC.ocuparSilla()                   //En esta parte se asigna una silla a un pasajero
+                                                                            pasajeroFull.asignarSilla(sillaPC)      //y un pasajero a una silla, de esta manera se compra.
+                                                                            println("Compra realizada con éxito.\n.\n.")
+                                                                        }
+                                                                        case None => println("Verifique su código de asiento.\nVolviendo.")
+                                                                    }
+                                                                }
+                                                                case 2 => {
+                                                                    var cont : Int = 1
+                                                                    var r : Random = new Random
+                                                                    var ran : Int = r.nextInt(vuelo.avionAsignado.capacidadMax)
+                                                                    vuelo.avionAsignado.listaSillas.foreach(sillaEC => {
+                                                                        if(sillaEC.numSilla == ran)
+                                                                        {
+                                                                            if(sillaEC.disponible == true && sillaEC.clase == "Clase economica")
+                                                                            {
+                                                                                sillaEC.asignarPasajero(pasajeroFull)
+                                                                                sillaEC.ocuparSilla()
+                                                                                pasajeroFull.asignarSilla(sillaEC)
+                                                                                println("El código de su silla es: " + sillaEC.codigoSilla)
+                                                                                println("Compra realizada con éxito.\n.\n.")
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                ran = r.nextInt(vuelo.avionAsignado.capacidadMax)
+                                                                            }
+                                                                        }
+                                                                    })
+                                                                }
+                                                                case 3 => {
+                                                                    var cont : Int = 1
+                                                                    println("| Numeración |\t| Código |")
+                                                                    vuelo.avionAsignado.listaSillas.foreach(sil => {
+                                                                        if(sil.clase == "Primera Clase" && sil.disponible == true)
+                                                                        {
+                                                                            println("| Silla #" + sil.numSilla +"|\t| " + sil.codigoSilla + " |")               
+                                                                        }
+                                                                        cont = cont + 1
+                                                                    })
+                                                                    println("Ingrese el código del asiento para su niñ@: ")
+                                                                    var sillaDec : String = StdIn.readLine()
+                                                                    var comSilla : Option[Silla] = vuelo.avionAsignado.buscarSilla(sillaDec)
+                                                                    comSilla match {
+                                                                        case Some(sillaPC) => {
+                                                                            sillaPC.asignarPasajero(pasajeroFull)
+                                                                            sillaPC.ocuparSilla()                   //En esta parte se asigna una silla a un pasajero
+                                                                            pasajeroFull.asignarSilla(sillaPC)      //y un pasajero a una silla, de esta manera se compra.
+                                                                            println("Compra realizada con éxito.\n.\n.")
+                                                                        }
+                                                                        case None => println("Verifique su código de asiento.\nVolviendo.")
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                        case None => println("No hay vuelos relacionados con el código ingresado.")
+                                                    }
 
                                                 }
                                             }) 
@@ -218,18 +347,53 @@ object Interfaz extends App
                     println("\nPanel de Control : Aeropuerto Central")
                     println("=====================================")
                     println("Sus opciones son:")
-                    println("1-> Asignar nuevo avión a aerolínea.")
-                    println("2-> Crear una nueva aerolínea.")
+                    println("1-> Crear una nueva aerolínea.")
+                    println("2-> Asignar nuevo avión a aerolínea.")
                     println("3-> Crear un nuevo vuelo disponible.")
                     println("4-> Consultar vuelos por Aerolinea.")
                     println("5 -> Modulo de pasajero")
                     println("6 -> Gestionar menor de edad")
+                    println("7-> Consultar viaje específico")
                     println("0 -> Volver.")
                     println("Su elección: ")
                     var opc : Int = StdIn.readInt()
                     opc match
                     {
-                        case 1 => {
+                        case 7 => {
+                            var comprobarAero = aeropuerto.comprobarAerolineas()
+                            comprobarAero match
+                            {
+                                case Success(s) => {
+                                    println("Ingrese el código del vuelo a buscar:")
+                                    var vueloBus : String = StdIn.readLine()
+                                    aeropuerto.listaAerolineas.foreach(aeroL => {
+                                        println("Buscando vuelo en " + aeroL.nombreAerolinea)
+                                        aeroL.listaVuelos.foreach(vueL => {
+                                            if(vueL.codigoVuelo == vueloBus){
+                                                println("Vuelo encontrado.\nIngrese una opción.")
+                                                println("1-> Ver info principal.\n2-> Ver sillas del vuelo.")
+                                                var elec : Int = StdIn.readInt()
+                                                elec match
+                                                {
+                                                    case 1 => {
+                                                        println("| Dia salida |\t| Hora salida |\t| Ciudad Origen |\t| Ciudad destino |\t| Código |\t| Avión |")
+                                                        println("| " + vueL.diaSalida + " |\t| " + vueL.horaSalida + " |\t| " + vueL.ciudadOrigen + " |\t| " + vueL.ciudadDestino+ " |\t| " + vueL.codigoVuelo+ " |\t|\t" + vueL.avionAsignado.nombreAvion)
+                                                    }
+                                                    case 2 => {
+                                                        var avionPro : Avion = vueL.avionAsignado
+                                                        println("| # |\t| Código |\t| Disponibilidad |")
+                                                        avionPro.listaSillas.foreach(sillaAv => {
+                                                            println("| " +sillaAv.numSilla+ " |\t| " + sillaAv.codigoSilla + " |\t| " + sillaAv.disponible)
+                                                        })
+                                                    }
+                                                }
+                                            }
+                                        })
+                                    })
+                                }
+                            }
+                        }
+                        case 2 => {
                             var comprobarAero = aeropuerto.comprobarAerolineas()
                             comprobarAero match
                             {
@@ -243,12 +407,18 @@ object Interfaz extends App
                                             println("1-> Nacionales")
                                             println("2-> Internacionales")
                                             var tipoV : Int = StdIn.readInt()
+                                            var capacity : Int = 0
+                                            if(tipoV == 1){capacity = 8}        //MODIFICAR CUANDO SE 
+                                            if(tipoV == 2){capacity = 16}       //COLOQUEN LAS CAPACIDADES REALES
                                             println("Ingrese un nombre o modelo para el avión:")
                                             var nomA : String = StdIn.readLine()
-                                            var crea = i.crearAvion(tipoV, nomA, aer)
+                                            var crea = i.crearAvion(tipoV, nomA, i, capacity)
                                             crea match
                                             {
-                                                case Success(s) => println("Avión creado con éxito.")
+                                                case Success(s) => {
+                                                    //println("Tipo avion : " + s.tipo)
+                                                    println("\nAvión creado con éxito.")
+                                                }
                                                 case Failure(f) => println(f)
                                             }
                                             
@@ -258,7 +428,7 @@ object Interfaz extends App
                                 case Failure(f) => println(f)
                             }
                         }
-                        case 2 => {
+                        case 1 => {
                             println("\nEscriba el nombre de la nueva aerolínea: ")
                             var nomAero : String = StdIn.readLine()
                             var nueva = aeropuerto.crearAerolinea(nomAero)
@@ -275,8 +445,8 @@ object Interfaz extends App
                                 case Success(s) => {
                                     println("\nAerolínea responsable del vuelo:")
                                     var aer : String = StdIn.readLine()
-                                    aeropuerto.listaAerolineas.foreach(i => {
-                                        if(i.nombreAerolinea == aer)
+                                    aeropuerto.listaAerolineas.foreach(aerolynea => {
+                                        if(aerolynea.nombreAerolinea == aer)
                                         {
                                             println("\nCreación de vuelos")
                                             println("=====================")
@@ -292,7 +462,7 @@ object Interfaz extends App
                                             println("1-> Nacional.")
                                             println("2-> Internacional.")
                                             var tipVu : Int = StdIn.readInt()
-                                            var creaVuelo = i.crearVuelo(ciuOr, ciuDe, diaSal, horSa, tipVu, aer)
+                                            var creaVuelo = aerolynea.crearVuelo(ciuOr, ciuDe, diaSal, horSa, tipVu, aer)
                                             creaVuelo match
                                             {
                                                 case Success(s) => {
@@ -300,7 +470,7 @@ object Interfaz extends App
                                                     {
                                                         println("Por favor ingrese el código del vuelo para especificar escalas:")
                                                         var codVuelo : String = StdIn.readLine()
-                                                        var vueloTemp : Option[Vuelo] = i.buscarVuelo(codVuelo)
+                                                        var vueloTemp : Option[Vuelo] = aerolynea.buscarVuelo(codVuelo)
                                                         vueloTemp match
                                                         {
                                                             case Some(a) => {
@@ -327,16 +497,35 @@ object Interfaz extends App
                                                     }
                                                     println("Por favor ingrese el código del vuelo para asignarle un avión.")
                                                     var codVuelo : String = StdIn.readLine()
-                                                    i.listaVuelos.foreach(k => {
-                                                        if(k.codigoVuelo == codVuelo){
-                                                            print("Listado de Aviones disponibles")
-                                                            print("\n==============================\n")
-                                                            i.mostrarAviones()
-                                                            println("\nIngrese el nombre del avión requerido para el vuelo:")
-                                                            var nomAvion : String = StdIn.readLine()
-                                                            k.cambiarAvion(i.listaAviones.filter( m => m.nombreAvion == nomAvion).head)
-                                                            //k._avionAsignado =  i.listaAviones.filter( m => m.nombreAvion == nomAvion).head
-                                                        }
+                                                    aerolynea.listaVuelos.foreach(k => {
+                                                    
+                                                            if(k.codigoVuelo == codVuelo){
+                                                                print("Listado de Aviones disponibles")
+                                                                print("\n==============================\n")
+                                                                println("| Nombre |\t| Tipo Vuelo |")
+                                                                aerolynea.listaAviones.foreach(avion =>{
+                                                                    if(avion.capacidadMax == 8 && tipVu == 1){ //CAMBIAR 8 por numero de sillas totales para v. Nacionales
+                                                                        aerolynea.mostrarAvion(avion) 
+                                                                    }
+                                                                    if(avion.capacidadMax == 16 && tipVu == 2){ //CAMBIAR 16 por numero de sillas totales para v. Nacionales
+                                                                        aerolynea.mostrarAvion(avion)
+                                                                    }
+                                                                })
+                                                                println("\nIngrese el nombre del avión requerido para el vuelo:")
+                                                                var nomAvion : String = StdIn.readLine()
+                                                                var asigAvi : Option[Avion] = aerolynea.buscarAvion(nomAvion)
+                                                                asigAvi match
+                                                                {
+                                                                    case Some(d) => {
+                                                                        d.agregarVuelo(k) //agregar el vuelo a la listaVUelos del avion seleccionado
+                                                                        k.avionAsignado = d //se asigna un avión para que relice este vuelo
+                                                                    }
+                                                                    case None => println("Ingrese un modelo o nombre de avión correcto.")
+                                                                }
+                                                            }
+                                                            else{
+                                                                println("Buscando... ")
+                                                            }
                                                     })
                                                     /*var vueloTemp1 : Option[Vuelo] = i.buscarVuelo(codVuelo)
                                                     vueloTemp1 match
@@ -344,10 +533,10 @@ object Interfaz extends App
                                                         case Some(k) => {
                                                             print("Listado de Aviones disponibles")
                                                             print("\n==============================\n")
-                                                            i.mostrarAviones()
+                                                            aerolynea.mostrarAviones()
                                                             println("\nIngrese el nombre del avión requerido para el vuelo:")
                                                             var nomAvion : String = StdIn.readLine()
-                                                            var asigAvi : Option[Avion] = i.buscarAvion(nomAvion)
+                                                            var asigAvi : Option[Avion] = aerolynea.buscarAvion(nomAvion)
                                                             asigAvi match{
                                                                 case Some(d) => {
                                                                     k.avionAsignado = d.asInstanceOf[Avion]
@@ -389,7 +578,7 @@ object Interfaz extends App
                             }
 
                         }
-                        case 5 => {
+                        /*case 5 => {
                             println("Modulo de pasajero")
                             println("=========================")
                             var costoSilla : Double = 0
@@ -552,7 +741,8 @@ object Interfaz extends App
                                 println("El vuelo esta completo")
                             }
 
-                        }
+                        }*/
+                       
                         case 0 => {
                             sesionOperario = false
                         }

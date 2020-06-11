@@ -5,12 +5,12 @@ import Aerolinea.Aerolinea
 
 class Avion
 {
-    var _tipo : Int =_ //1 -> Nacional  / 2 -> internacional
+    var _tipo : Int = _ //1 -> Nacional  / 2 -> internacional
     var _capacidadMax : Int = _  //nacional = 50 / Internacional = 100
     var _nombreAvion : String = _
-    var _aerolinea : String = _
+    var _aerolinea : Aerolinea = new Aerolinea
     var _listaSillas : List[Silla] = List()
-    var _listaVuelos : String = _
+    var _listaVuelos : List[Vuelo] = List()
     var _listaTripulacion : List[Tripulante] = List()
 
     def tipo = _tipo
@@ -24,28 +24,51 @@ class Avion
 
     def capacidadMax_= (nuevaCapacidad : Int) = _capacidadMax = nuevaCapacidad
     def nombreAvion_= (nuevoNombre : String) = _nombreAvion = nuevoNombre
-    def aerolinea_= (nuevaAerolinea : String) = _aerolinea = nuevaAerolinea 
+    def aerolinea_= (nuevaAerolinea : Aerolinea) = _aerolinea = nuevaAerolinea 
 
     /*def this(nom : String)
     {
         this()
         _nombreAvion = nom
     }*/
-    def this(tip : Int, nom : String, aerol : String)
+    //FALTA AGREGAR CAPACIDAD MAXIMA AL CONSTRUCTOR Y TRAER DESDE CUANDO UNO CREA EL AVION PARA AEROLINEA
+    //Y SELECCIONA SI ES INTERNACIONAL O NACIONAL, NACIONAL MAX: 50, INTERNACIONAL 100
+    def this(tip : Int, nom : String, aerol : Aerolinea, capacidad : Int)
     {
         this()
-        var n : Int = 0
-        while(n < (12 * tip)) 
+        var n : Int = 1
+        while(n <= (3 * tip)) 
         {
             _listaSillas = new SillaPrimeraClase(n) :: _listaSillas
             n += 1
         }
-        while(n < (38 * tip))
+        while(n <= (5 * tip))
         {
             _listaSillas = new SillaEconomica(n) :: _listaSillas
             n += 1
         }
         _nombreAvion = nom
         _aerolinea = aerol
+        _capacidadMax = capacidad
+    }
+
+    def buscarSilla(codigo : String) : Option[Silla] =
+    {
+        var sillaTemp : Option[Silla] = None
+        if(listaSillas.nonEmpty)
+        {
+            sillaTemp = listaSillas.filter(silla => silla.codigoSilla == codigo).headOption
+        }
+        return sillaTemp
+    }
+
+    def cambiarCapacidad(nuevaCap : Int) : Unit =
+    {
+        capacidadMax = nuevaCap
+    }
+
+    def agregarVuelo(nuevoVuelo : Vuelo) : Unit =
+    {
+        _listaVuelos = nuevoVuelo :: _listaVuelos
     }
 }
