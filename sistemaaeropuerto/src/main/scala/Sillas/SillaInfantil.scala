@@ -27,6 +27,11 @@ class SillaInfantil extends Silla
         _numSilla = num
     }
 
+    override def asignarPasajero(pasa : Pasajero) : Unit =
+    {
+        _pasajeroAsignado = pasa
+    }
+
     def agregarPersonal(asig : Tripulante) : Unit = 
     {
         _personalAsignado = asig

@@ -2,7 +2,6 @@ package Aeropuerto
 import scala.io._
 import scala.util._
 import ControlVuelos._
-import ControlVuelos._
 import Personas._
 import Servicios._
 import Sillas._
@@ -354,6 +353,7 @@ object Interfaz extends App
                     println("5 -> Modulo de pasajero")
                     println("6 -> Gestionar menor de edad")
                     println("7-> Consultar viaje específico")
+                    println("8-> Gestionar vuelo")
                     println("0 -> Volver.")
                     println("Su elección: ")
                     var opc : Int = StdIn.readInt()
@@ -390,6 +390,87 @@ object Interfaz extends App
                                             }
                                         })
                                     })
+                                }
+                            }
+                        }
+                        case 8 => {
+                            var comprobarAero = aeropuerto.comprobarAerolineas()
+                            comprobarAero match
+                            {
+                                case Success(s) => {
+                                    println("GESTIÓN DE VUELOS")
+                                    println("====================")
+                                    println("Vuelos Disponibles")
+                                    println("------------------")
+
+                                    var comprobarAero = aeropuerto.comprobarAerolineas()
+                                    comprobarAero match
+                                    {
+                                        case Success(s) => {
+                                            aeropuerto.listaAerolineas.foreach(i => {
+                                                i.mostrarVuelos
+                                            })
+                                        }
+                                    }
+                                    println("Ingrese el código del vuelo a buscar:")
+                                    var vueloBus : String = StdIn.readLine()
+                                    aeropuerto.listaAerolineas.foreach(aeroL => {
+                                        println("Buscando vuelo en " + aeroL.nombreAerolinea)
+                                        aeroL.listaVuelos.foreach(vueL => {
+                                            if(vueL.codigoVuelo == vueloBus){
+                                                println("Vuelo encontrado.\nIngrese una opción.")
+                                                println("1-> Eliminar vuelo.\n2-> Cambiar avión de un vuelo.")
+                                                var elec : Int = StdIn.readInt()
+                                                elec match
+                                                {
+                                                    case 1 => {
+                                                        var newListA : List[Vuelo] = aeroL.listaVuelos.filter(k => k.codigoVuelo != vueloBus)
+                                                        aeroL.actualizarVuelos(newListA)
+                                                        println("Vuelo eliminado.")
+                                                    }
+                                                    case 2 => {
+                                                        println("Avión actual\n====================")
+                                                        var vuelo : Option[Vuelo] = aeroL.buscarVuelo(vueloBus)
+                                                        vuelo match
+                                                        {
+                                                            case Some(elVuelo) => {
+                                                                println("| Avión | \t | TipoAvión | \t | CódigoVuelo |")
+                                                                println("| "+elVuelo.avionAsignado.nombreAvion+" | \t | "+elVuelo.avionAsignado.tipo+" | \t | "+elVuelo.codigoVuelo+" |")
+                                                            }
+                                                            case None => println("No hay avión asignado a este vuelo.")
+                                                        }
+                                                        println("Lista de aviones disponibles en la aerolínea")
+                                                        println("=============================================")
+                                                        println("| Avión | \t | TipoAvión | \t | CódigoVuelo |")
+                                                        aeroL.listaAviones.foreach(avion => {
+                                                            println("| "+avion.nombreAvion+" | \t | "+avion.tipo+" | \t | "+vueloBus+" |")
+                                                        })
+                                                        println("Ingrese el nombre del nuevo avión para el vuelo:")
+                                                        var nomAvion : String = StdIn.readLine()
+                                                        var asigAvi : Option[Avion] = aeroL.buscarAvion(nomAvion)
+                                                        asigAvi match
+                                                        {
+                                                            case Some(d) => {
+                                                                aeroL.listaVuelos.foreach(vueloSe => {
+                                                                    if(vueloSe.codigoVuelo == vueloBus)
+                                                                    {
+                                                                        vueloSe.avionAsignado.actualizarVuelos(vueloSe.avionAsignado.listaVuelos.filter(vue => vue.codigoVuelo != vueloBus)) //Se elimina el vuelo buscado de la lista de vuelos del avión actual
+                                                                        d.agregarVuelo(vueL) //se agrega el vuelo a la lista de vuelos del avión
+                                                                        vueloSe.cambiarAvion(d) //Se actualiza el vuelo con el nuevo avión asignado
+
+                                                                    }
+                                                                })
+                                                            }
+                                                            case None => println("Ingrese un modelo o nombre de avión correcto.")
+                                                        }
+
+                                                    }
+
+                                                }
+                                            }
+                                        })
+                                    })
+
                                 }
                             }
                         }
@@ -578,7 +659,7 @@ object Interfaz extends App
                             }
 
                         }
-                        /*case 5 => {
+                        case 5 => {
                             println("Modulo de pasajero")
                             println("=========================")
                             var costoSilla : Double = 0
@@ -622,28 +703,38 @@ object Interfaz extends App
                                         }
                                         else
                                         {
-                                            i.cambiarEstado()
-                                            var pasa : Pasajero = new Pasajero(nombrePas,docum)
-                                            costoSilla = i.precio 
-                                            i.asignarPasajero(pasa)
-                                            println("Silla asignada correctamente")
-                                            println("Ingrese número de maletas las cuales llevara en su viaje")
-                                            var numMal : Int = StdIn.readInt()
-                                            if(numMal > 3)
-                                            {
-                                                println("Mas maletas de las permitidas por la aerolinea, por favor saque algunas")
-                                                println("¿Necesitas algun servicio especial?")
-                                                var espe : String = StdIn.readLine()
-                                                pasa.agregarEspecial(docum)
+                                            i.ocuparSilla()
 
+                                            costoSilla = i.precio 
+                                            
+                                            println("Silla asignada correctamente")
+                                            println("Planes Disponibles")
+                                            println("==================")
+                                            println("M -> Máx: 2 Maletas\nL -> Máx: 4 Maletas\nXL -> Máx 6 Maletas")
+                                            println("Ingrese su tipo de plan deseado:")
+                                            var planUs : String = StdIn.readLine()
+                                            println("Ingrese el número de maletas:")
+                                            var maletUs : Int = StdIn.readInt()
+                                            if(planUs == "M" && maletUs > 2)
+                                            {
+                                                println("Excede el número de maletas para su plan.")
+                                                println("Confirme el número de maletas.")
+                                                var maletUs : Int = StdIn.readInt()
+                                            } 
+                                            if(planUs == "L" && maletUs > 4)
+                                            {
+                                                println("Excede el número de maletas para su plan.")
+                                                println("Confirme el número de maletas.")
+                                                var maletUs : Int = StdIn.readInt()
                                             }
-                                            else
-                                            {   
-                                                println("Número de maletas permitido por la Aerolinea")
-                                                println("¿Necesitas algun servicio especial?")
-                                                var espe : String = StdIn.readLine()
-                                                pasa.agregarEspecial(docum)
+                                            if(planUs == "XL" && maletUs > 6)
+                                            {
+                                                println("Excede el número de maletas permitido por persona.")
+                                                println("Confirme el número de maletas.")
+                                                var maletUs : Int = StdIn.readInt()
                                             }
+                                            var pasa : Pasajero = new Pasajero(nombrePas,docum,planUs,maletUs,false)
+                                            i.asignarPasajero(pasa)
                                         }
                                     }
                                 }
@@ -702,10 +793,9 @@ object Interfaz extends App
                                         else
                                         {
                                             var sillaNino : SillaInfantil = new SillaInfantil(i.numSilla)
-                                            sillaNino.cambiarEstado()
-                                            var pasa : Pasajero = new Pasajero(nombrePas,docum)
+                                            sillaNino.ocuparSilla()
+                                            
                                             costoSilla = sillaNino.precio 
-                                            sillaNino.asignarPasajero(pasa)
                                             println("Nombre tripulante que acompañara al menor")
                                             var nomTri : String = StdIn.readLine()
                                             println("Cedula del tripulante que acompañara al menor")
@@ -717,19 +807,33 @@ object Interfaz extends App
                                             println("Cedula : "+ cedu)
                                             sillaNino.agregarPersonal(tripu)
                                             println("Silla asignada correctamente")
-                                            println("Ingrese número de maletas las cuales llevara el menor en su viaje")
-                                            var numMal : Int = StdIn.readInt()
-                                            if(numMal > 3)
+                                            println("Planes Disponibles")
+                                            println("==================")
+                                            println("M -> Máx: 2 Maletas\nL -> Máx: 4 Maletas\nXL -> Máx 6 Maletas")
+                                            println("Ingrese su tipo de plan deseado:")
+                                            var planUs : String = StdIn.readLine()
+                                            println("Ingrese el número de maletas:")
+                                            var maletUs : Int = StdIn.readInt()
+                                            if(planUs == "M" && maletUs > 2)
                                             {
-                                                println("Mas maletas de las permitidas por la aerolinea, por favor saque algunas")
-                                                pasa.agregarEspecial("clase infantil")
-
+                                                println("Excede el número de maletas para su plan.")
+                                                println("Confirme el número de maletas.")
+                                                var maletUs : Int = StdIn.readInt()
+                                            } 
+                                            if(planUs == "L" && maletUs > 4)
+                                            {
+                                                println("Excede el número de maletas para su plan.")
+                                                println("Confirme el número de maletas.")
+                                                var maletUs : Int = StdIn.readInt()
                                             }
-                                            else
-                                            {   
-                                                println("Número de maletas permitido por la Aerolinea")
-                                                pasa.agregarEspecial("clase infantil")
+                                            if(planUs == "XL" && maletUs > 6)
+                                            {
+                                                println("Excede el número de maletas permitido por persona.")
+                                                println("Confirme el número de maletas.")
+                                                var maletUs : Int = StdIn.readInt()
                                             }
+                                            var pasa : Pasajero = new Pasajero(nombrePas,docum,planUs,maletUs,false)
+                                            sillaNino.asignarPasajero(pasa)
                                         }
                                     }
                                 }
@@ -741,7 +845,7 @@ object Interfaz extends App
                                 println("El vuelo esta completo")
                             }
 
-                        }*/
+                        }
                        
                         case 0 => {
                             sesionOperario = false

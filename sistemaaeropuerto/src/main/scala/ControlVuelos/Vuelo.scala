@@ -83,7 +83,7 @@ class Vuelo
         } 
     }
     def cambiarAvion(nuevoAv : Avion) : Unit = {
-        avionAsignado = nuevoAv
+        this._avionAsignado = nuevoAv
     }
     
 }

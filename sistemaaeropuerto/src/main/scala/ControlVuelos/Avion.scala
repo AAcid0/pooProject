@@ -26,13 +26,6 @@ class Avion
     def nombreAvion_= (nuevoNombre : String) = _nombreAvion = nuevoNombre
     def aerolinea_= (nuevaAerolinea : Aerolinea) = _aerolinea = nuevaAerolinea 
 
-    /*def this(nom : String)
-    {
-        this()
-        _nombreAvion = nom
-    }*/
-    //FALTA AGREGAR CAPACIDAD MAXIMA AL CONSTRUCTOR Y TRAER DESDE CUANDO UNO CREA EL AVION PARA AEROLINEA
-    //Y SELECCIONA SI ES INTERNACIONAL O NACIONAL, NACIONAL MAX: 50, INTERNACIONAL 100
     def this(tip : Int, nom : String, aerol : Aerolinea, capacidad : Int)
     {
         this()
@@ -70,5 +63,10 @@ class Avion
     def agregarVuelo(nuevoVuelo : Vuelo) : Unit =
     {
         _listaVuelos = nuevoVuelo :: _listaVuelos
+    }
+
+    def actualizarVuelos(newListVue : List[Vuelo]) : Unit =
+    {
+        this._listaVuelos = newListVue
     }
 }

@@ -24,6 +24,10 @@ class Aerolinea
         _nombreAerolinea = nombre
     }
 
+    def actualizarVuelos(newListaV : List[Vuelo]) : Unit = {
+        this._listaVuelos = newListaV
+    }
+    
     def mostrarVuelos() : Unit =
     {
         if(!listaVuelos.isEmpty)
