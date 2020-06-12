@@ -6,7 +6,7 @@ import Personas._
 import Servicios._
 import Sillas._
 
-object Interfaz extends App
+/*object Interfaz extends App
 {
     var aeropuerto : Aeropuerto = new Aeropuerto
     var cerrarSistema : Boolean = false
@@ -861,4 +861,4 @@ object Interfaz extends App
             }
         }
     }
-}
+}*/
