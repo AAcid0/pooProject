@@ -6,7 +6,7 @@ import Personas._
 import Servicios._
 import Sillas._
 
-/*object Interfaz extends App
+object Interfaz extends App
 {
     var aeropuerto : Aeropuerto = new Aeropuerto
     var cerrarSistema : Boolean = false
@@ -73,6 +73,7 @@ import Sillas._
                                                 i.mostrarVuelos
                                             })
                                         }
+                                        case Failure(f) => println(f)
                                     }
                                 }
                                 case 3 => {
@@ -94,6 +95,7 @@ import Sillas._
                                                 }
                                             })
                                         }
+                                        case Failure(f) => println(f)
                                     }
                                 }
                             }
@@ -253,6 +255,7 @@ import Sillas._
                                                 }
                                             }) 
                                         }
+                                        case Failure(f) => println(f)
                                     }
                                 }
                             }
@@ -391,7 +394,9 @@ import Sillas._
                                         })
                                     })
                                 }
+                                case Failure(f) => println(f)
                             }
+                            
                         }
                         case 8 => {
                             var comprobarAero = aeropuerto.comprobarAerolineas()
@@ -411,6 +416,7 @@ import Sillas._
                                                 i.mostrarVuelos
                                             })
                                         }
+                                        case Failure(f) => println(f)
                                     }
                                     println("Ingrese el código del vuelo a buscar:")
                                     var vueloBus : String = StdIn.readLine()
@@ -472,6 +478,7 @@ import Sillas._
                                     })
 
                                 }
+                                case Failure(f) => println(f)
                             }
                         }
                         case 2 => {
@@ -861,4 +868,4 @@ import Sillas._
             }
         }
     }
-}*/
+}
